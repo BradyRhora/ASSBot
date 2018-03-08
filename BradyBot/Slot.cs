@@ -11,7 +11,6 @@ namespace ASSbot
         double value;
         string symbol;
         string category;
-        string subcategory;
 
         public Slot(string symbol, int value)
         {
@@ -24,7 +23,6 @@ namespace ASSbot
             this.symbol = $":{symbol}:";
             this.value = value;
             this.category = category;
-            subcategory = "none";
         }
 
         public double GetValue() { return value; }
