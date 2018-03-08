@@ -8,7 +8,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
-namespace BradyBot
+namespace ASSbot
 {
     public class Bot
     {
@@ -16,13 +16,15 @@ namespace BradyBot
 
         public static DiscordSocketClient client;
         private CommandService commands;
+        public static ConnectFour cfGame;
+        public static IMessage lastCF = null;
 
         public async Task Run()
         {
             Start:
             try
             {
-                Console.WriteLine("Welcome, Brady. Initializing Bradybot...");
+                Console.WriteLine("Welcome, Brady. Initializing ASSbot...");
                 client = new DiscordSocketClient();
                 Console.WriteLine("Client Initialized.");
                 commands = new CommandService();
@@ -30,11 +32,11 @@ namespace BradyBot
                 //string token = File.ReadAllLines(@"Constants\Token")[0];
                 await InstallCommands();
                 Console.WriteLine("Commands Installed, logging in.");
-                await client.LoginAsync(TokenType.Bot, "MzYzNTY5NDE3NDI4MTQwMDMy.DLDLSw.gccbkjS6tMaszjDG9n3ts_PzPS4");
+                await client.LoginAsync(TokenType.Bot, "NDE2NDcwNTA5NTg1NDMyNTg4.DXE76g.zD7D-YWITwodPao2exhyJ0kZt6Y");
                 Console.WriteLine("Successfully logged in!");
                 // Connect the client to Discord's gateway
                 await client.StartAsync();
-                Console.WriteLine("Bradybot successfully intialized.");
+                Console.WriteLine("ASSbot successfully intialized.");
                 // Block this task until the program is exited.
                 await Task.Delay(-1);
             }
@@ -74,7 +76,7 @@ namespace BradyBot
             if (message == null) return;
             int argPos = 0;
             
-            if (message.HasCharPrefix('^', ref argPos))
+            if (message.HasCharPrefix('?', ref argPos))
             {
 
                 var context = new CommandContext(client, message);
