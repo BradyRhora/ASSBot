@@ -123,5 +123,8 @@
     <Content Include="bin\Debug\System.Interactive.Async.xml" />
     <Content Include="bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Release\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
