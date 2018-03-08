@@ -115,10 +115,5 @@ namespace ASSbot
                 sm.spinTimer.Start();
             }
         }
-
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
