@@ -33,7 +33,7 @@ namespace ASSbot
                 }));
             }
 
-            await Context.User.SendMessageAsync("", embed: emb.Build());
+            await Context.Channel.SendMessageAsync("", embed: emb.Build());
         }
 
         [Command("insult"), Alias(new string[] { "in" })]
