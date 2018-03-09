@@ -15,7 +15,7 @@ namespace ASSbot
         static void Main(string[] args) => new Bot().Run().GetAwaiter().GetResult();
 
         public static DiscordSocketClient client;
-        private CommandService commands;
+        public static CommandService commands;
         public static ConnectFour cfGame;
         public static IMessage lastCF = null;
 

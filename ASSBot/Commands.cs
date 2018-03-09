@@ -13,6 +13,29 @@ namespace ASSbot
     {
 
         Random rdm = new Random();
+        [Command("help"), Summary("Displays commands and descriptions.")]
+        public async Task Help()
+        {
+            JEmbed emb = new JEmbed();
+            emb.Author.Name = "Commands";
+
+            foreach (CommandInfo command in Bot.commands.Commands)
+            {
+                emb.Fields.Add(new JEmbedField(x =>
+                {
+                    string header = "?" + command.Name;
+                    foreach (ParameterInfo parameter in command.Parameters)
+                    {
+                        header += " [" + parameter.Name + "]";
+                    }
+                    x.Header = header;
+                    x.Text = command.Summary;
+                }));
+            }
+
+            await Context.User.SendMessageAsync("", embed: emb.Build());
+        }
+
         [Command("insult"), Alias(new string[] { "in" })]
         public async Task Test()
         {
@@ -41,7 +64,7 @@ namespace ASSbot
             await Context.Channel.SendMessageAsync(sentence);
         }
 
-        [Command("connectfour"), Alias(new string[] { "cf" })]
+        [Command("connectfour"), Alias(new string[] { "cf" }), Summary("Play a game of Connect Four with another user.")]
         public async Task ConnectFour([Remainder]string param)
         {
             if (!Bot.cfGame.IsOngoing())
@@ -77,7 +100,7 @@ namespace ASSbot
             await Context.Channel.SendMessageAsync(user.Mention + ", " + Context.User.Username + " has challenged you to a game of Connect Four! Use `?cf join` to accept!");
         }
 
-        [Command("profile")]
+        [Command("profile"), Summary("View yours or another users profile.")]
         public async Task Profile() { await Profile(Context.User); }
 
         [Command("profile")]
@@ -99,7 +122,7 @@ namespace ASSbot
             else await Context.Channel.SendMessageAsync("Only Brady can do this currently.");
         }
         
-        [Command("slots")]
+        [Command("slots"), Summary("Spin the slots and win cash!")]
         public async Task Slots(int bet)
         {
             var user = Functions.GetUser(Context.User);
@@ -116,5 +139,7 @@ namespace ASSbot
                 sm.spinTimer.Start();
             }
         }
+
+
     }
 }

@@ -73,7 +73,6 @@ namespace ASSbot
                 else if (CategoryCount("fruit") == 3) return 5;
                 else if (CategoryCount("fruit") == 2) return 3;
                 else if (SlotCount("cherries") == 2) return 5;
-
             }
             return 0;
         }
