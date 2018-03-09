@@ -104,6 +104,7 @@ namespace ASSbot
         {
             var user = Functions.GetUser(Context.User);
             if (user.GetCoins() < bet) await Context.Channel.SendMessageAsync(":slot_machine: | You do not have that many coins!");
+            else if (bet <= 0) await Context.Channel.SendMessageAsync(":slot_machine: | Your bet must be above 0.");
             else
             {
                 user.GiveCoins(-bet);

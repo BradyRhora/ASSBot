@@ -47,7 +47,7 @@ namespace ASSbot
             string board = ":slot_machine: **SLOTS** :slot_machine:\n" +
                            "===========\n" +
                            $"{slots[Prev(spins[0])]} : {slots[Prev(spins[1])]} : {slots[Prev(spins[2])]}\n" +
-                           $"{slots[spins[0]]} : {slots[spins[1]]} : {slots[spins[2]]}\n" +
+                           $"{slots[spins[0]]} : {slots[spins[1]]} : {slots[spins[2]]} :arrow_left:\n" +
                            $"{slots[Next(spins[0])]} : {slots[Next(spins[1])]} : {slots[Next(spins[2])]}";
 
             if (SpinCount() >= 3)
