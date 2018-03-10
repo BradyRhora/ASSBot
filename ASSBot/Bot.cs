@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using System.IO;
 
 namespace ASSbot
 {
@@ -29,10 +30,10 @@ namespace ASSbot
                 Console.WriteLine("Client Initialized.");
                 commands = new CommandService();
                 Console.WriteLine("Command Service Initialized.");
-                //string token = File.ReadAllLines(@"Constants\Token")[0];
+                string token = File.ReadAllLines(@"Files\Token")[0];
                 await InstallCommands();
                 Console.WriteLine("Commands Installed, logging in.");
-                await client.LoginAsync(TokenType.Bot, "NDE2NDcwNTA5NTg1NDMyNTg4.DXE76g.zD7D-YWITwodPao2exhyJ0kZt6Y");
+                await client.LoginAsync(TokenType.Bot, token);
                 Console.WriteLine("Successfully logged in!");
                 // Connect the client to Discord's gateway
                 await client.StartAsync();

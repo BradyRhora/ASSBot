@@ -111,6 +111,7 @@
     <Content Include="bin\Debug\Discord.Net.Webhook.xml" />
     <Content Include="bin\Debug\Discord.Net.WebSocket.dll" />
     <Content Include="bin\Debug\Discord.Net.WebSocket.xml" />
+    <None Include="bin\Debug\Files\Token" />
     <Content Include="bin\Debug\Files\Users.txt" />
     <Content Include="bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
     <Content Include="bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.xml" />
