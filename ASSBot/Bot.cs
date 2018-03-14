@@ -83,7 +83,10 @@ namespace ASSbot
                 var context = new CommandContext(client, message);
                 var result = await commands.ExecuteAsync(context, argPos);
                 if (!result.IsSuccess)
+                {
                     Console.WriteLine(result.ErrorReason);
+                    await message.Channel.SendMessageAsync(result.ErrorReason);
+                }
             }
             else return;
         }
