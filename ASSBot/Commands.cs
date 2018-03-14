@@ -18,6 +18,7 @@ namespace ASSbot
         {
             JEmbed emb = new JEmbed();
             emb.Author.Name = "Commands";
+            emb.ColorStripe = Constants.Colours.PEACH;
 
             foreach (CommandInfo command in Bot.commands.Commands)
             {
@@ -134,6 +135,8 @@ namespace ASSbot
             else if (bet <= 0) await Context.Channel.SendMessageAsync(":slot_machine: | Your bet must be above 0.");
             else
             {
+                Properties.Settings.Default.jackpot += bet;
+                Properties.Settings.Default.Save();
                 user.GiveCoins(-bet);
                 SlotMachine sm = new SlotMachine(Context.User, bet);
                 sm.spinTimer = new Timer(1000);
