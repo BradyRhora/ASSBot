@@ -45,6 +45,7 @@ namespace ASSbot
 
         public void Save()
         {
+            owe += Convert.ToInt32(Math.Ceiling(owe * 0.01));
             string userdata = id + ":" + coins + ":" + owe + ":" + loanDate.Year + "-" + loanDate.DayOfYear;
             var users = File.ReadAllLines("Files/Users.txt");
             for (int i = 1; i < users.Count(); i++)

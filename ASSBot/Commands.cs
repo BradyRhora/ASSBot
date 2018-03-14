@@ -165,13 +165,14 @@ namespace ASSbot
             }
             else if (int.TryParse(command,out amount))
             {
-                if (amount <= 1000 && amount > 0)
+                if (amount <= 1000 && amount > 0 && user.GetDebt() == 0)
                 {
                     user.SetLoan(amount);
                     await Context.Channel.SendMessageAsync("Shady Guy: \"Alright.. Make sure you get it back to me!\" **You now have a loan " +
-                                                           "of " + amount + " coins.. Make sure to pay it back quickly with `?loan pay [amount]` "+
+                                                           "of " + amount + " coins.. Make sure to pay it back quickly with `?loan pay [amount]` " +
                                                            "or the interest could go through the roof!**");
                 }
+                else if (user.GetDebt() > 0) await Context.Channel.SendMessageAsync("Shady Guy: \"You really think I would let you take out *another* loan? Get outta here!\"");
                 else await Context.Channel.SendMessageAsync("**Invalid loan amount**");
             }
             else if (command.StartsWith("pay "))
