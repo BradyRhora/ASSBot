@@ -21,7 +21,9 @@ namespace ASSbot
             coins = Convert.ToInt32(data[1]);
             owe = Convert.ToInt32(data[2]);
             var dates = data[3].Split('-');
-            DateTime theDate = new DateTime(Convert.ToInt32(dates[0]), 1, 1).AddDays(Convert.ToInt32(dates[1]) - 1);
+            int year = Convert.ToInt32(dates[0]);
+            if (year == 0) year = DateTime.Now.Year;
+            DateTime theDate = new DateTime(year, 1, 1).AddDays(Convert.ToInt32(dates[1]) - 1);
         }
 
         public int GetCoins() { return coins; }
