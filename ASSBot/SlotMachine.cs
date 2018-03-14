@@ -34,7 +34,8 @@ namespace ASSbot
             BlankSlot,
             new Slot("bell",20),
             new Slot("seven",50),
-            new Slot("gem",100)
+            new Slot("moneybag",100),
+            new Slot("gem",0)
         };
 
         public void Spin()
@@ -45,6 +46,8 @@ namespace ASSbot
         public string Generate()
         {
             string board = ":slot_machine: **SLOTS** :slot_machine:\n" +
+                           "===========\n" +
+                           ":gem: " + Properties.Settings.Default.jackpot + "\n" +
                            "===========\n" +
                            $"{slots[Prev(spins[0])]} : {slots[Prev(spins[1])]} : {slots[Prev(spins[2])]}\n" +
                            $"{slots[spins[0]]} : {slots[spins[1]]} : {slots[spins[2]]} :arrow_left:\n" +
@@ -68,7 +71,14 @@ namespace ASSbot
         {
             for (int i = 0; i < slots.Count(); i++)
             {
-                if (spins[0] == i && spins[1] == i && spins[2] == i) return slots[i].GetValue();
+                if (SlotCount("gem") == 3)
+                {
+                    var jackpot = Properties.Settings.Default.jackpot;
+                    Properties.Settings.Default.jackpot = 0;
+                    Properties.Settings.Default.Save();
+                    return jackpot;
+                }
+                else if (spins[0] == i && spins[1] == i && spins[2] == i) return slots[i].GetValue();
                 else if (SlotCount("seven") == 2) return 10;
                 else if (CategoryCount("fruit") == 3) return 5;
                 else if (CategoryCount("fruit") == 2) return 3;
