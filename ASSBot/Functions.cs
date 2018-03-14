@@ -43,11 +43,11 @@ namespace ASSbot
             await msg.ModifyAsync(x => x.Content = slot.Generate());
             if (slot.SpinCount() >= 3 && !slot.CashedOut())
             {
-                int winnings = Convert.ToInt32(slot.GetBet() * slot.GetMultiplier());
+                int winnings = Convert.ToInt32(slot.GetWinnings());
                 GiveCoins(GetUser(slot.GetGambler()), winnings);
 
                 string resultMSG;
-                if (slot.GetMultiplier() != 0) resultMSG = $"You got {winnings} coins!";
+                if (slot.GetWinnings() != 0) resultMSG = $"You got {winnings} coins!";
                 else resultMSG = $"You lost {slot.GetBet()} coins.";
 
                 await msg.Channel.SendMessageAsync(resultMSG);

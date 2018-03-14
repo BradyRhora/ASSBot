@@ -56,7 +56,7 @@ namespace ASSbot
             if (SpinCount() >= 3)
             {
                 string resultMSG = ":poop: YOU LOSE";
-                if (GetMultiplier() != 0) resultMSG = ":star: YOU WIN!";
+                if (GetWinnings() != 0) resultMSG = ":star: YOU WIN!";
 
                 board += "\n===========\n" +
                          resultMSG + "\n" +
@@ -67,7 +67,7 @@ namespace ASSbot
         }
         public int SpinCount() { return spinCounter; }
 
-        public double GetMultiplier()
+        public double GetWinnings()
         {
             for (int i = 0; i < slots.Count(); i++)
             {
@@ -78,11 +78,11 @@ namespace ASSbot
                     Properties.Settings.Default.Save();
                     return jackpot;
                 }
-                else if (spins[0] == i && spins[1] == i && spins[2] == i) return slots[i].GetValue();
-                else if (SlotCount("seven") == 2) return 10;
-                else if (CategoryCount("fruit") == 3) return 5;
-                else if (CategoryCount("fruit") == 2) return 3;
-                else if (SlotCount("cherries") == 2) return 5;
+                else if (spins[0] == i && spins[1] == i && spins[2] == i) return slots[i].GetValue() * bet;
+                else if (SlotCount("seven") == 2) return 10 * bet;
+                else if (CategoryCount("fruit") == 3) return 5 * bet;
+                else if (CategoryCount("fruit") == 2) return 3 * bet;
+                else if (SlotCount("cherries") == 2) return 5 * bet;
             }
             return 0;
         }
