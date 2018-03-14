@@ -65,19 +65,20 @@ namespace ASSbot
         }
 
         [Command("connectfour"), Alias(new string[] { "cf" }), Summary("Play a game of Connect Four with another user.")]
-        public async Task ConnectFour([Remainder]string param)
+        public async Task ConnectFour([Remainder]string user)
         {
+            string param = user;
             if (!Bot.cfGame.IsOngoing())
             {
                 if (param == null || param == "") await Context.Channel.SendMessageAsync("Use `?cf [username]` to invite someone to a game of Connect Four!");
-                else if (param == "join" && Bot.cfGame.Opponent().Id == Context.User.Id)
+                else if (param == "join" && Bot.cfGame.GetPlayer(0).Id == Context.User.Id)
                 {
                     await Context.Channel.SendMessageAsync($"Player {Bot.cfGame.Turn()} goes first!\nUse `?cf [num between 1-7]` to place a chip.");
                     Bot.lastCF = await Context.Channel.SendMessageAsync(Bot.cfGame.GenerateBoard());
                     Bot.cfGame.Start();
                 }
             }
-            else if ((Context.User.Id == Bot.cfGame.Challenger().Id && Bot.cfGame.Turn() == 1) || (Context.User.Id == Bot.cfGame.Opponent().Id && Bot.cfGame.Turn() == 2))
+            else if ((Context.User.Id == Bot.cfGame.GetPlayer(1).Id && Bot.cfGame.Turn() == 1) || (Context.User.Id == Bot.cfGame.GetPlayer(1).Id && Bot.cfGame.Turn() == 2))
             {
                 bool success = int.TryParse(param, out int choice);
 
@@ -87,7 +88,8 @@ namespace ASSbot
                     await Bot.lastCF.DeleteAsync();
                     Bot.lastCF = await Context.Channel.SendMessageAsync(Bot.cfGame.GenerateBoard());
 
-                    if (Bot.cfGame.IsOngoing() == false) await Context.Channel.SendMessageAsync($"Game over! Player {Bot.cfGame.Turn()} wins!");
+                    if (Bot.cfGame.IsOngoing() == false) await Context.Channel.SendMessageAsync($"Game over! Player {Bot.cfGame.Turn()} wins! And recieves {Bot.cfGame.TurnCount() * 2} coins.");
+                    Functions.GiveCoins(Functions.GetUser(Bot.cfGame.GetPlayer(Bot.cfGame.Turn())), Bot.cfGame.TurnCount() * 2);
                 }
                 else await Context.Channel.SendMessageAsync("Please enter a valid column number between 1 and 7.");
             }
@@ -126,12 +128,14 @@ namespace ASSbot
         public async Task Slots(int bet)
         {
             var user = Functions.GetUser(Context.User);
-            if (user.GetCoins() < bet) await Context.Channel.SendMessageAsync(":slot_machine: | You do not have that many coins!");
+
+            if (user.GetCoins() == 0) await Context.Channel.SendMessageAsync("Shady Guy: \"Looks like you're outta coin... Come meet me if you need some *assistance*...\" `?loan`");
+            else if (user.GetCoins() < bet) await Context.Channel.SendMessageAsync(":slot_machine: | You do not have that many coins!");
             else if (bet <= 0) await Context.Channel.SendMessageAsync(":slot_machine: | Your bet must be above 0.");
             else
             {
                 user.GiveCoins(-bet);
-                SlotMachine sm = new SlotMachine(Context.User,bet);
+                SlotMachine sm = new SlotMachine(Context.User, bet);
                 sm.spinTimer = new Timer(1000);
                 sm.Spin();
                 var msg = await Context.Channel.SendMessageAsync(sm.Generate());
@@ -140,6 +144,60 @@ namespace ASSbot
             }
         }
 
+        [Command("loan")]
+        public async Task Loan() { await Loan(""); }
 
+        [Command("loan")]
+        public async Task Loan([Remainder]string command)
+        {
+            int amount;
+            var user = Functions.GetUser(Context.User);
+
+            if (command == "")
+            {
+                if (user.GetDebt() == 0)
+                {
+                    await Context.Channel.SendMessageAsync("Shady Guy: \"Hey... I can get you some quick cash, " +
+                                                           "but it'll be at a high interest.. How much you want?\"" +
+                                                           " **Use `?loan amount` to take out a loan up to 1000 coins.**");
+                }
+                else await Context.Channel.SendMessageAsync("Shady Guy: \"Where's my money, man? You still owe me " + user.GetDebt() + " coins! Hurry up!\"");
+            }
+            else if (int.TryParse(command,out amount))
+            {
+                if (amount <= 1000 && amount > 0)
+                {
+                    user.SetLoan(amount);
+                    await Context.Channel.SendMessageAsync("Shady Guy: \"Alright.. Make sure you get it back to me!\" **You now have a loan " +
+                                                           "of " + amount + " coins.. Make sure to pay it back quickly with `?loan pay [amount]` "+
+                                                           "or the interest could go through the roof!**");
+                }
+                else await Context.Channel.SendMessageAsync("**Invalid loan amount**");
+            }
+            else if (command.StartsWith("pay "))
+            {
+                string payAmount = command.Replace("pay ", "").Replace(" ", "");
+                int pay;
+                if (int.TryParse(payAmount, out pay))
+                {
+                    if (user.GetCoins() >= pay)
+                    {
+                        user.PayDebt(pay);
+                        if (user.GetDebt() > 0) await Context.Channel.SendMessageAsync("Shady Dealer: \"Thanks... But you still owe me! " +
+                                                                                       user.GetDebt() + " more coins! Now get out!\"");
+                        else if (user.GetDebt() == 0) await Context.Channel.SendMessageAsync("Shady Dealer: \"Hey.. About time! Thanks, " +
+                                                                                             "you've paid off your entire debt.\"");
+                        else if (user.GetDebt() < 0)
+                        {
+                            await Context.Channel.SendMessageAsync("Shady Dealer: \"Uh, hey buddy, I think you overpaid me." +
+                                                                  " Since I'm such a nice guy, I'll give you your change back.\n");
+                            user.GiveCoins(-user.GetDebt());
+                            user.SetLoan(0);
+                        }
+                    }
+                }
+                else await Context.Channel.SendMessageAsync("**Invalid payment amount");
+            }
+        }
     }
 }

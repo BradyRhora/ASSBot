@@ -23,7 +23,7 @@ namespace ASSbot
                     }
                 }
 
-                File.AppendAllText("Files/Users.txt", "\n" + id + ":1");
+                File.AppendAllText("Files/Users.txt", "\n" + id + ":1:0:0-0");
             }
         }
 

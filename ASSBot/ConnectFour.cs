@@ -9,8 +9,11 @@ namespace ASSbot
 {
     public class ConnectFour
     {
-        IUser turn1, turn2;
-        int turn = 1;
+        IUser[] player = new IUser[2];
+        int turn;
+        int turnCount = 0;
+
+        Random rdm = new Random();
 
         bool ongoing = false;
 
@@ -18,16 +21,15 @@ namespace ASSbot
 
         public ConnectFour(IUser p1, IUser p2)
         {
-            turn1 = p1;
-            turn2 = p2;
-
+            player[0] = p1;
+            player[1] = p2;
+            turn = rdm.Next(2);
             for (int x = 0; x < 7; x++) for (int y = 0; y < 6; y++) board[x, y] = 0;
         
         }
 
         public bool IsOngoing() { return ongoing; }
-        public IUser Challenger() { return turn1; }
-        public IUser Opponent() { return turn2; }
+        public IUser GetPlayer(int id) { return player[id]; }
         public int Turn() { return turn; }
 
         public void Start()
@@ -37,19 +39,22 @@ namespace ASSbot
 
         public void Play(int choice)
         {
+            turnCount++;
             choice -= 1;
             for (int y = 0; y < 6; y++)
             {
                 if (y == 5 || board[choice, y + 1] != 0) { board[choice, y] = turn; break; }
             }
 
-            if (CheckForWinner()) ongoing = false;
+            if (CheckForWinner()) ongoing = false; 
             else
             {
                 if (turn == 1) turn = 2;
                 else turn = 1;
             }
         }
+
+        public int TurnCount() { return turnCount; }
 
         public string GenerateBoard()
         {
@@ -143,7 +148,6 @@ namespace ASSbot
             }
             return false;
         }
-        
         /*
          * fix four in a row
          * fix full columns
