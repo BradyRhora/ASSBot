@@ -52,22 +52,11 @@ namespace ASSbot
                            $"{slots[Prev(spins[0])]} : {slots[Prev(spins[1])]} : {slots[Prev(spins[2])]}\n" +
                            $"{slots[spins[0]]} : {slots[spins[1]]} : {slots[spins[2]]} :arrow_left:\n" +
                            $"{slots[Next(spins[0])]} : {slots[Next(spins[1])]} : {slots[Next(spins[2])]}";
-
-            if (SpinCount() >= 3)
-            {
-                string resultMSG = ":poop: YOU LOSE";
-                if (GetMultiplier() != 0) resultMSG = ":star: YOU WIN!";
-
-                board += "\n===========\n" +
-                         resultMSG + "\n" +
-                         "===========";
-            }
-
             return board;
         }
         public int SpinCount() { return spinCounter; }
 
-        public double GetMultiplier()
+        public double GetWinnings()
         {
             for (int i = 0; i < slots.Count(); i++)
             {
@@ -78,11 +67,11 @@ namespace ASSbot
                     Properties.Settings.Default.Save();
                     return jackpot;
                 }
-                else if (spins[0] == i && spins[1] == i && spins[2] == i) return slots[i].GetValue();
-                else if (SlotCount("seven") == 2) return 10;
-                else if (CategoryCount("fruit") == 3) return 5;
-                else if (CategoryCount("fruit") == 2) return 3;
-                else if (SlotCount("cherries") == 2) return 5;
+                else if (spins[0] == i && spins[1] == i && spins[2] == i) return slots[i].GetValue() * bet;
+                else if (SlotCount("seven") == 2) return 10 * bet;
+                else if (CategoryCount("fruit") == 3) return 5 * bet;
+                else if (CategoryCount("fruit") == 2) return 3 * bet;
+                else if (SlotCount("cherries") == 2) return 5 * bet;
             }
             return 0;
         }
@@ -115,7 +104,7 @@ namespace ASSbot
             int slotCount = 0;
             for (int i = 0; i < 3; i++)
             {
-                if (slots[spins[i]].ToString() == slot) slotCount++;
+                if (slots[spins[i]].ToString() == ":"+slot+":") slotCount++;
             }
             return slotCount;
         }
