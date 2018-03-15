@@ -52,17 +52,6 @@ namespace ASSbot
                            $"{slots[Prev(spins[0])]} : {slots[Prev(spins[1])]} : {slots[Prev(spins[2])]}\n" +
                            $"{slots[spins[0]]} : {slots[spins[1]]} : {slots[spins[2]]} :arrow_left:\n" +
                            $"{slots[Next(spins[0])]} : {slots[Next(spins[1])]} : {slots[Next(spins[2])]}";
-
-            if (SpinCount() >= 3)
-            {
-                string resultMSG = ":poop: YOU LOSE";
-                if (GetWinnings() != 0) resultMSG = ":star: YOU WIN!";
-
-                board += "\n===========\n" +
-                         resultMSG + "\n" +
-                         "===========";
-            }
-
             return board;
         }
         public int SpinCount() { return spinCounter; }
@@ -115,7 +104,7 @@ namespace ASSbot
             int slotCount = 0;
             for (int i = 0; i < 3; i++)
             {
-                if (slots[spins[i]].ToString() == slot) slotCount++;
+                if (slots[spins[i]].ToString() == ":"+slot+":") slotCount++;
             }
             return slotCount;
         }
