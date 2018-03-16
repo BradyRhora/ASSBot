@@ -114,7 +114,7 @@ namespace ASSbot
             await Context.Channel.SendMessageAsync($"```md\n{user.Username}'s Profile\n===================\n\nCoins: {u.GetCoins()}\n```");
         }
 
-        [Command("givecoins")]
+        [Command("givecoins"), Alias(new string[] { "gc" })]
         public async Task GiveCoins(int amount, IUser user)
         {
             if (Context.User.Id == 108312797162541056)
@@ -123,6 +123,22 @@ namespace ASSbot
                 await Context.Channel.SendMessageAsync($":moneybag: | {user.Username} has been given {amount} coins.");
             }
             else await Context.Channel.SendMessageAsync("Only Brady can do this currently.");
+        }
+
+        [Command("donate"), Summary("Give some of your coins to someone else.")]
+        public async Task Donate(int amount, IUser user)
+        {
+            User u1 = Functions.GetUser(Context.User);
+            User u2 = Functions.GetUser(user);
+
+            if (u1.GetCoins() >= amount)
+            {
+                u1.GiveCoins(-amount);
+                u2.GiveCoins(amount);
+
+                await Context.Channel.SendMessageAsync($"{u1} has successfully given {u2} {amount} coins.");
+            }
+            else await Context.Channel.SendMessageAsync("You do not have that many coins.");
         }
         
         [Command("slots"), Summary("Spin the slots and win cash!")]

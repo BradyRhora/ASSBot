@@ -58,6 +58,7 @@ namespace ASSbot
             }
             File.WriteAllLines("Files/Users.txt", users);
         }
-
+        
+        public override string ToString(){ return Bot.client.GetUser(id).Username; }
     }
 }
