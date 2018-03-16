@@ -75,7 +75,8 @@ namespace ASSbot
         {
             var message = messageParam as SocketUserMessage;
             if (message == null) return;
-            else if (message.Content == "no u" && message.Author.Id != client.CurrentUser.Id) await message.Channel.SendMessageAsync("no u");
+            else if ((message.Content == "<:NoU:416480596861386752>" || message.Content == "no u") && message.Author.Id != client.CurrentUser.Id) await message.Channel.SendMessageAsync(message.Content);
+            
 
             int argPos = 0;
             
