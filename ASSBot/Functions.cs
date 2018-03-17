@@ -37,6 +37,9 @@ namespace ASSbot
             user.GiveCoins(amount);
         }
         
-        
+        public static string[] GetUserList()
+        {
+            return File.ReadAllLines("Files/Users.txt");
+        }
     }
 }

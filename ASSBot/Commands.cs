@@ -224,5 +224,42 @@ namespace ASSbot
                 else await Context.Channel.SendMessageAsync("**Invalid payment amount");
             }
         }
+
+        [Command("leaderboard"), Summary("")]
+        public async Task Leaderboard()
+        {
+            var users = Functions.GetUserList();
+
+            User[] topUsers = new User[5];
+
+            foreach(string userdata in users)
+            {
+                User user = new User(userdata);
+                for (int i = 0; i < 5; i++)
+                {
+                    User temp;
+                    if (topUsers[i] == null)
+                    {
+                        topUsers[i] = user; break;
+                    }
+                    else if (user.GetCoins() > topUsers[i].GetCoins())
+                    {
+                        temp = topUsers[i];
+                        topUsers[i] = user;
+                        user = temp;
+                    }
+                }
+            }
+
+            string list = "```http\nTop Users\n";
+            foreach(User u in topUsers)
+            {
+                list += $"{u} - {u.GetCoins()}\n";
+            }
+            list += "```";
+
+            await Context.Channel.SendMessageAsync(list);
+
+        }
     }
 }
