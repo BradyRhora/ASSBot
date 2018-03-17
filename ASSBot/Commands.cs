@@ -144,22 +144,27 @@ namespace ASSbot
         [Command("slots"), Summary("Spin the slots and win cash!")]
         public async Task Slots(int bet)
         {
-            var user = Functions.GetUser(Context.User);
-
-            if (user.GetCoins() == 0) await Context.Channel.SendMessageAsync("Shady Guy: \"Looks like you're outta coin... Come meet me if you need some *assistance*...\" `?loan`");
-            else if (user.GetCoins() < bet) await Context.Channel.SendMessageAsync(":slot_machine: | You do not have that many coins!");
-            else if (bet <= 0) await Context.Channel.SendMessageAsync(":slot_machine: | Your bet must be above 0.");
-            else
+            try
             {
-                Properties.Settings.Default.jackpot += bet;
-                Properties.Settings.Default.Save();
-                user.GiveCoins(-bet);
-                SlotMachine sm = new SlotMachine(Context.User, bet);
-                sm.spinTimer = new Timer(1000);
-                sm.Spin();
-                var msg = await Context.Channel.SendMessageAsync(sm.Generate());
-                sm.spinTimer.Elapsed += (sender, e) => Functions.SpinSlots(msg, sm);
-                sm.spinTimer.Start();
+                var user = Functions.GetUser(Context.User);
+
+                if (user.GetCoins() == 0) await Context.Channel.SendMessageAsync("Shady Guy: \"Looks like you're outta coin... Come meet me if you need some *assistance*...\" `?loan`");
+                else if (user.GetCoins() < bet) await Context.Channel.SendMessageAsync(":slot_machine: | You do not have that many coins!");
+                else if (bet <= 0) await Context.Channel.SendMessageAsync(":slot_machine: | Your bet must be above 0.");
+                else
+                {
+                    Properties.Settings.Default.jackpot += bet;
+                    Properties.Settings.Default.Save();
+                    user.GiveCoins(-bet);
+                    SlotMachine sm = new SlotMachine(Context.User, bet);
+                    var result = sm.Spin();
+                    var msg = await Context.Channel.SendMessageAsync(sm.Generate() + "\n" + result);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Slots error!\n" + e.Message);
+                await Context.Channel.SendMessageAsync("Slots error.\n" + e.Message);
             }
         }
 

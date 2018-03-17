@@ -15,7 +15,6 @@ namespace ASSbot
         int[] spins = new int[3];
         Random rdm = new Random();
         int spinCounter = 0;
-        public Timer spinTimer;
         bool cashedOut = false;
 
         public SlotMachine(IUser user, int bet)
@@ -38,10 +37,24 @@ namespace ASSbot
             new Slot("gem",0)
         };
 
-        public void Spin()
+        public string Spin()
         {
             for (int i = 0; i < 3; i++) spins[i] = rdm.Next(slots.Count());
-            spinCounter++;
+
+            int winnings = Convert.ToInt32(GetWinnings());
+            Functions.GiveCoins(Functions.GetUser(GetGambler()), winnings);
+
+            string winMSG = ":poop: YOU LOSE";
+            if (winnings != 0) winMSG = ":star: YOU WIN!";
+
+            string resultMSG = "\n===========\n" +
+                     winMSG + "\n" +
+                     "===========";
+
+            if (winnings != 0) resultMSG += $"\nYou got {winnings} coins!";
+            else resultMSG += $"\nYou lost {GetBet()} coins.";
+
+            return resultMSG;
         }
         public string Generate()
         {
