@@ -251,10 +251,10 @@ namespace ASSbot
                 }
             }
 
-            string list = "```http\nTop Users\n";
+            string list = "```css\n[Top Users]\n";
             foreach(User u in topUsers)
             {
-                list += $"{u} - {u.GetCoins()}\n";
+                list += $"[{u}] \t-\t {u.GetCoins()}\n";
             }
             list += "```";
 
