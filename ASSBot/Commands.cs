@@ -111,7 +111,7 @@ namespace ASSbot
         {
             User u = Functions.GetUser(user.Id);
 
-            await Context.Channel.SendMessageAsync($"```md\n{user.Username}'s Profile\n===================\n\nCoins: {u.GetCoins()}\n```");
+            await Context.Channel.SendMessageAsync($"```md\n{user.Username}'s Profile\n===================\n\nLevel:{u.GetLevel()}\nCoins: {u.GetCoins() - u.GetDebt()}\n```");
         }
 
         [Command("givecoins"), Alias(new string[] { "gc" })]
@@ -140,7 +140,7 @@ namespace ASSbot
             }
             else await Context.Channel.SendMessageAsync("You do not have that many coins.");
         }
-        
+
         [Command("slots"), Summary("Spin the slots and win cash!")]
         public async Task Slots(int bet)
         {
@@ -187,7 +187,7 @@ namespace ASSbot
                 }
                 else await Context.Channel.SendMessageAsync("Shady Guy: \"Where's my money, man? You still owe me " + user.GetDebt() + " coins! Hurry up!\"");
             }
-            else if (int.TryParse(command,out amount))
+            else if (int.TryParse(command, out amount))
             {
                 if (amount <= 1000 && amount > 0 && user.GetDebt() == 0)
                 {
@@ -232,7 +232,7 @@ namespace ASSbot
 
             User[] topUsers = new User[5];
 
-            foreach(string userdata in users)
+            foreach (string userdata in users)
             {
                 User user = new User(userdata);
                 for (int i = 0; i < 5; i++)
@@ -242,7 +242,7 @@ namespace ASSbot
                     {
                         topUsers[i] = user; break;
                     }
-                    else if (user.GetCoins() > topUsers[i].GetCoins())
+                    else if (user.GetLevel() > topUsers[i].GetLevel() || (user.GetLevel() == topUsers[i].GetLevel() && user.GetCoins() > topUsers[i].GetCoins()))
                     {
                         temp = topUsers[i];
                         topUsers[i] = user;
@@ -252,9 +252,9 @@ namespace ASSbot
             }
 
             string list = "```css\n  ==Top Users==\n";
-            foreach(User u in topUsers)
+            foreach (User u in topUsers)
             {
-                list += String.Format("{0,15}{1,10}\n","["+u+"]",u.GetCoins());
+                list += String.Format("{0,15}{1,10}\n", "[" + u + "]", "Level: " + u.GetLevel() + "Coins: " + u.GetCoins());
             }
             list += "```";
 
@@ -262,10 +262,30 @@ namespace ASSbot
 
         }
 
-        [Command("levelup"),Summary("Increase your level using money!")]
-        public async Task LevelUp()
-        {
+        [Command("level")]
+        public async Task Level() { await Level(""); }
 
+        [Command("level"),Summary("Increase your level using money!")]
+        public async Task Level([Remainder]string command)
+        {
+            User user = Functions.GetUser(Context.User);
+            
+            if (command == "")
+            {
+                await Context.Channel.SendMessageAsync($"{user}, your current level is {user.GetLevel()} and it will cost"+
+                    " you {Math.Pow(user.GetLevel() + 1, 5)} to level up further.\nUse `?level up` to level up!");
+            }
+            else if (command == "up")
+            {
+                var cost = Convert.ToInt64(Math.Pow(user.GetLevel() + 1, 5));
+                if (user.GetCoins() >= cost)
+                {
+                    user.LevelUp();
+                    await Context.Channel.SendMessageAsync($":confetti_ball:**LEVEL UP!**:fireworks: {user} is now level {user.GetLevel()}!");
+                }
+                else await Context.Channel.SendMessageAsync("You do not have enough funds to level up.");
+                
+            }
         }
     }
 }

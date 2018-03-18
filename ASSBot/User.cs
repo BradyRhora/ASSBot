@@ -10,6 +10,7 @@ namespace ASSbot
     class User
     {
         ulong id;
+        int level;
         long coins;
         long owe;
         DateTime loanDate;
@@ -18,17 +19,25 @@ namespace ASSbot
         {
             var data = userdata.Split(':');
             id = Convert.ToUInt64(data[0]);
-            coins = Convert.ToInt32(data[1]);
-            owe = Convert.ToInt32(data[2]);
-            var dates = data[3].Split('-');
+            level = Convert.ToInt32(data[1]);
+            coins = Convert.ToInt64(data[2]);
+            owe = Convert.ToInt64(data[3]);
+            var dates = data[4].Split('-');
             int year = Convert.ToInt32(dates[0]);
             if (year == 0) year = DateTime.Now.Year;
             DateTime theDate = new DateTime(year, 1, 1).AddDays(Convert.ToInt32(dates[1]) - 1);
         }
 
+        public int GetLevel() { return level; }
         public long GetCoins() { return coins; }
         public long GetDebt() { return owe; }
 
+        public void LevelUp()
+        {
+            coins -= Convert.ToInt64(Math.Pow(level + 1, 5));
+            level++;
+            Save();
+        }
         public void GiveCoins(long amount) { coins += amount; Save(); }
         public void SetLoan(int amount) {
             owe = amount;
@@ -45,8 +54,8 @@ namespace ASSbot
 
         public void Save()
         {
-            owe += Convert.ToInt32(Math.Ceiling(owe * 0.01));
-            string userdata = id + ":" + coins + ":" + owe + ":" + loanDate.Year + "-" + loanDate.DayOfYear;
+            owe += Convert.ToInt32(Math.Ceiling(owe * 0.001));
+            string userdata = id + ":" + level + ":" + coins + ":" + owe + ":" + loanDate.Year + "-" + loanDate.DayOfYear;
             var users = File.ReadAllLines("Files/Users.txt");
             for (int i = 1; i < users.Count(); i++)
             {

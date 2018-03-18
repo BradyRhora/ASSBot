@@ -26,9 +26,9 @@ namespace ASSbot.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int jackpot {
+        public long jackpot {
             get {
-                return ((int)(this["jackpot"]));
+                return ((long)(this["jackpot"]));
             }
             set {
                 this["jackpot"] = value;
