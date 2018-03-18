@@ -32,11 +32,11 @@ namespace ASSbot
             return GetUser(user.Id);
         }
 
-        public static void GiveCoins(User user, int amount)
+        public static void GiveCoins(User user, long amount)
         {
             user.GiveCoins(amount);
         }
-        
+
         public static string[] GetUserList()
         {
             return File.ReadAllLines("Files/Users.txt");

@@ -225,7 +225,7 @@ namespace ASSbot
             }
         }
 
-        [Command("leaderboard"), Summary("")]
+        [Command("leaderboard"), Summary("See the top 5 users.")]
         public async Task Leaderboard()
         {
             var users = Functions.GetUserList();
@@ -259,6 +259,12 @@ namespace ASSbot
             list += "```";
 
             await Context.Channel.SendMessageAsync(list);
+
+        }
+
+        [Command("levelup"),Summary("Increase your level using money!")]
+        public async Task LevelUp()
+        {
 
         }
     }

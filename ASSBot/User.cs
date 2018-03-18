@@ -10,8 +10,8 @@ namespace ASSbot
     class User
     {
         ulong id;
-        int coins;
-        int owe;
+        long coins;
+        long owe;
         DateTime loanDate;
 
         public User(string userdata)
@@ -26,10 +26,10 @@ namespace ASSbot
             DateTime theDate = new DateTime(year, 1, 1).AddDays(Convert.ToInt32(dates[1]) - 1);
         }
 
-        public int GetCoins() { return coins; }
-        public int GetDebt() { return owe; }
+        public long GetCoins() { return coins; }
+        public long GetDebt() { return owe; }
 
-        public void GiveCoins(int amount) { coins += amount; Save(); }
+        public void GiveCoins(long amount) { coins += amount; Save(); }
         public void SetLoan(int amount) {
             owe = amount;
             coins += amount;
