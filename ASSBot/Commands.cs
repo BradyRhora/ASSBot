@@ -254,7 +254,7 @@ namespace ASSbot
             string list = "```css\n  ==Top Users==\n";
             foreach (User u in topUsers)
             {
-                list += String.Format("{0,15}{1,10}\n", "[" + u + "]", "Level: " + u.GetLevel() + "Coins: " + u.GetCoins());
+                list += String.Format("{0,15}{1,10}\n", "[" + u + "]", "Level: " + u.GetLevel() + " Coins: " + u.GetCoins());
             }
             list += "```";
 
@@ -263,28 +263,33 @@ namespace ASSbot
         }
 
         [Command("level")]
-        public async Task Level() { await Level(""); }
+        public async Task Level() { await Level("", 0); }
 
         [Command("level"),Summary("Increase your level using money!")]
-        public async Task Level([Remainder]string command)
+        public async Task Level(string command, int amount = 1)
         {
             User user = Functions.GetUser(Context.User);
             
             if (command == "")
             {
                 await Context.Channel.SendMessageAsync($"{user}, your current level is {user.GetLevel()} and it will cost"+
-                    $" you {Math.Pow(user.GetLevel() + 1, 5)} to level up further.\nUse `?level up` to level up!");
+                    $" you {Math.Pow(user.GetLevel() + 1, 5)} coins to level up further.\nUse `?level up` to level up!");
             }
             else if (command == "up")
             {
-                var cost = Convert.ToInt64(Math.Pow(user.GetLevel() + 1, 5));
-                if (user.GetCoins() >= cost)
+                bool success = false;
+                for (int i = 0; i < amount; i++)
                 {
-                    user.LevelUp();
-                    await Context.Channel.SendMessageAsync($":confetti_ball:**LEVEL UP!**:fireworks: {user} is now level {user.GetLevel()}!");
+                    var cost = Convert.ToInt64(Math.Pow(user.GetLevel() + 1, 5));
+                    if (user.GetCoins() >= cost)
+                    {
+                        user.LevelUp();
+                        success = true;
+                    }
+                    else break;
                 }
-                else await Context.Channel.SendMessageAsync("You do not have enough funds to level up.");
-                
+                if (success) await Context.Channel.SendMessageAsync($":confetti_ball:**LEVEL UP!**:fireworks: {user} is now level {user.GetLevel()}!");
+                else await Context.Channel.SendMessageAsync("Not enough funds");
             }
         }
     }
