@@ -41,5 +41,20 @@ namespace ASSbot
         {
             return File.ReadAllLines("Files/Users.txt");
         }
+
+        public static Color GetColor(IUser User)
+        {
+            var user = User as IGuildUser;
+            if (user == null)
+            {
+                if (user.RoleIds.ToArray().Count() > 1)
+                {
+                    var role = Bot.client.GetGuild(Constants.Guilds.ASSCLUB).GetRole(user.RoleIds.ElementAtOrDefault(1));
+                    return role.Color;
+                }
+                else return Constants.Colours.PEACH;
+            }
+            else return Constants.Colours.PEACH;
+        }
     }
 }

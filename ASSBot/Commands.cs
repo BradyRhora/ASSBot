@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using System.Timers;
 
 namespace ASSbot
 {
@@ -109,9 +108,16 @@ namespace ASSbot
         [Command("profile")]
         public async Task Profile(IUser user)
         {
-            User u = Functions.GetUser(user.Id);
+            User u = Functions.GetUser(user);
 
-            await Context.Channel.SendMessageAsync($"```md\n{user.Username}'s Profile\n===================\n\nLevel:{u.GetLevel()}\nCoins: {u.GetCoins() - u.GetDebt()}\n```");
+            JEmbed emb = new JEmbed();
+            emb.Author.Name = user.Username;
+            emb.ColorStripe = Functions.GetColor(user);
+            emb.ThumbnailUrl = user.GetAvatarUrl();
+            emb.Fields.Add(new JEmbedField(":trophy:Level:trophy:", Convert.ToString(u.GetLevel())));
+            emb.Fields.Add(new JEmbedField(":moneybag:Coins:moneybag:", Convert.ToString(u.GetCoins())));
+
+            await Context.Channel.SendMessageAsync("", embed: emb.Build());
         }
 
         [Command("givecoins"), Alias(new string[] { "gc" })]
@@ -292,5 +298,7 @@ namespace ASSbot
                 else await Context.Channel.SendMessageAsync("Not enough funds");
             }
         }
+        
+
     }
 }
