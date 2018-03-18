@@ -273,7 +273,7 @@ namespace ASSbot
             if (command == "")
             {
                 await Context.Channel.SendMessageAsync($"{user}, your current level is {user.GetLevel()} and it will cost"+
-                    " you {Math.Pow(user.GetLevel() + 1, 5)} to level up further.\nUse `?level up` to level up!");
+                    $" you {Math.Pow(user.GetLevel() + 1, 5)} to level up further.\nUse `?level up` to level up!");
             }
             else if (command == "up")
             {
