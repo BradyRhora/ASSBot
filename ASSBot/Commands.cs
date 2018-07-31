@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using HtmlAgilityPack;
 
 namespace ASSbot
 {
@@ -12,6 +13,8 @@ namespace ASSbot
     {
 
         Random rdm = new Random();
+        
+
         [Command("help"), Summary("Displays commands and descriptions.")]
         public async Task Help()
         {
@@ -37,7 +40,7 @@ namespace ASSbot
         }
 
         [Command("insult"), Alias(new string[] { "in" })]
-        public async Task Test()
+        public async Task Insult()
         {
             string[] words = {"stupid","fuck","mother","with","shit","bitch","from hell","ass","asshoel","motherfuck","bookshelf","your",
                 "you","cunt","hell","in"};
@@ -45,7 +48,7 @@ namespace ASSbot
             int wordCount = rdm.Next(3, words.Count());
 
 
-            string[] pre = { "i", "i will", "im gonna", "" };
+            string[] pre = { "i", "i will", "im gonna", "","you are" };
 
             string sentence = pre[rdm.Next(pre.Count())];
 
@@ -173,12 +176,9 @@ namespace ASSbot
                 await Context.Channel.SendMessageAsync("Slots error.\n" + e.Message);
             }
         }
-
+        
         [Command("loan")]
-        public async Task Loan() { await Loan(""); }
-
-        [Command("loan")]
-        public async Task Loan([Remainder]string command)
+        public async Task Loan([Remainder]string command = "")
         {
             int amount;
             var user = Functions.GetUser(Context.User);
@@ -267,12 +267,9 @@ namespace ASSbot
             await Context.Channel.SendMessageAsync(list);
 
         }
-
-        [Command("level")]
-        public async Task Level() { await Level("", 0); }
-
+        
         [Command("level"),Summary("Increase your level using money!")]
-        public async Task Level(string command, int amount = 1)
+        public async Task Level(string command = "", int amount = 1)
         {
             User user = Functions.GetUser(Context.User);
             
@@ -297,6 +294,15 @@ namespace ASSbot
                 if (success) await Context.Channel.SendMessageAsync($":confetti_ball:**LEVEL UP!**:fireworks: {user} is now level {user.GetLevel()}!");
                 else await Context.Channel.SendMessageAsync("Not enough funds");
             }
+        }
+        
+        [Command("trivia"), Summary("Play trivia with your friends and earn coins!")]
+        public async Task Trivia(string command = "")
+        {
+            throw new NotImplementedException();
+            string url = "https://opentdb.com/";
+            HtmlWeb web = new HtmlWeb();
+            web.Load("https://opentdb.com/api.php?amount=10");
         }
         
 
